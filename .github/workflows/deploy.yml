@@ -112,7 +112,7 @@ jobs:
             export DOCKERHUB_FRONTEND="${FRONTEND_IMAGE}"
             export IMAGE_TAG="${IMAGE_TAG}"
 
-            docker compose -f docker-compose.prod.yml up -d --remove-orphans --pull always
+            docker compose -f docker-compose.prod.yml --env-file .env.production up -d --remove-orphans --pull always
 
             echo "==> Pruning unused images..."
             docker image prune -f

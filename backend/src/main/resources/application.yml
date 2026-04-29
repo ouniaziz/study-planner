@@ -1,0 +1,30 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5434/studyplanner
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+  jackson:
+    serialization:
+      write-dates-as-timestamps: false
+
+app:
+  jwt:
+    # Base64-encoded 256-bit secret key — change in production!
+    secret: dGhpc2lzYXZlcnlzZWN1cmVqd3RzZWNyZXRrZXlmb3JzdHVkeXBsYW5uZXI=
+    expiration: 86400000   # 24 hours in milliseconds
+
+server:
+  port: 8080
+
+logging:
+  level:
+    com.studyplanner: DEBUG

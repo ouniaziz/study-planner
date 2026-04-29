@@ -1,0 +1,16 @@
+# Terraform state & secrets – NEVER commit these
+terraform/.terraform/
+terraform/.terraform.lock.hcl
+terraform/terraform.tfstate
+terraform/terraform.tfstate.backup
+terraform/terraform.tfvars
+terraform/*.tfvars
+terraform/crash.log
+
+# Production environment secrets
+.env.production
+.env.*.local
+
+# macOS / Windows noise
+.DS_Store
+Thumbs.db

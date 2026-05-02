@@ -17,12 +17,3 @@ output "ssh_connect_command" {
   value       = "ssh -i <path-to-private-key> ec2-user@${aws_instance.studyplanner.public_ip}"
 }
 
-output "ecr_backend_url" {
-  description = "ECR repository URL for the backend image"
-  value       = "${var.aws_account_id}.dkr.ecr.${var.aws_region}.amazonaws.com/studyplanner-backend"
-}
-
-output "ecr_frontend_url" {
-  description = "ECR repository URL for the frontend image"
-  value       = "${var.aws_account_id}.dkr.ecr.${var.aws_region}.amazonaws.com/studyplanner-frontend"
-}

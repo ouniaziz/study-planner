@@ -27,7 +27,3 @@ variable "ssh_public_key" {
   # or a terraform.tfvars file (gitignored).
 }
 
-variable "aws_account_id" {
-  description = "Your 12-digit AWS account ID (used for ECR URL construction)"
-  type        = string
-}

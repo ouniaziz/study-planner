@@ -106,6 +106,9 @@ resource "aws_instance" "studyplanner" {
   # Give the instance a public IP automatically
   associate_public_ip_address = true
 
+  # Force EC2 recreation if user_data changes
+  user_data_replace_on_change = true
+
   # Bootstrap: install Docker + Compose plugin, pull nothing yet
   user_data = <<-EOF
     #!/bin/bash

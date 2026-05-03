@@ -74,13 +74,13 @@ jobs:
       - name: Checkout source
         uses: actions/checkout@v4
 
-      - name: Copy production compose file and env to EC2
+      - name: Copy production compose file to EC2
         uses: appleboy/scp-action@v0.1.7
         with:
           host:      ${{ secrets.EC2_HOST }}
           username:  ec2-user
           key:       ${{ secrets.EC2_SSH_PRIVATE_KEY }}
-          source:    "docker-compose.prod.yml,.env.production.example"
+          source:    "docker-compose.prod.yml"
           target:    "/opt/studyplanner"
           overwrite: true
 
@@ -107,11 +107,6 @@ jobs:
 
             echo "==> Deploying with Docker Compose..."
             cd /opt/studyplanner
-
-            # Create default .env.production from example if it doesn't exist
-            if [ ! -f .env.production ]; then
-              cp .env.production.example .env.production
-            fi
 
             export DOCKERHUB_BACKEND="${BACKEND_IMAGE}"
             export DOCKERHUB_FRONTEND="${FRONTEND_IMAGE}"

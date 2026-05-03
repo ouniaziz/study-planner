@@ -17,3 +17,7 @@ output "ssh_connect_command" {
   value       = "ssh -i <path-to-private-key> ec2-user@${aws_instance.studyplanner.public_ip}"
 }
 
+output "rds_endpoint" {
+  description = "The endpoint of the RDS PostgreSQL instance"
+  value       = aws_db_instance.postgres.endpoint
+}

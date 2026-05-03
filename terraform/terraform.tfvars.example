@@ -8,3 +8,6 @@ instance_type  = "t2.micro"
 
 # Paste the full content of your ~/.ssh/id_rsa.pub (or equivalent) here.
 ssh_public_key = "ssh-rsa AAAA...your-public-key... user@host"
+
+# RDS Database password
+db_password = "CHANGE_ME_strong_password_here"

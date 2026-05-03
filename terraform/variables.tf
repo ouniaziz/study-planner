@@ -27,3 +27,20 @@ variable "ssh_public_key" {
   # or a terraform.tfvars file (gitignored).
 }
 
+variable "db_name" {
+  description = "The name of the database to create"
+  type        = string
+  default     = "studyplanner"
+}
+
+variable "db_username" {
+  description = "Database master username"
+  type        = string
+  default     = "postgres"
+}
+
+variable "db_password" {
+  description = "Database master password"
+  type        = string
+  sensitive   = true
+}

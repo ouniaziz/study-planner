@@ -132,6 +132,19 @@ resource "aws_instance" "studyplanner" {
     # --- App directory ---
     mkdir -p /opt/studyplanner
     chown ec2-user:ec2-user /opt/studyplanner
+
+    # --- Generate Environment File ---
+    cat << 'ENVEOF' > /opt/studyplanner/.env.production
+    POSTGRES_HOST=${aws_db_instance.postgres.address}
+    POSTGRES_DB=${var.db_name}
+    POSTGRES_USER=${var.db_username}
+    POSTGRES_PASSWORD=${var.db_password}
+    APP_JWT_SECRET=bXlfc3VwZXJfc2VjcmV0X3N0dWR5X3BsYW5uZXJfa2V5XzEyMzQ1Njc4OQ==
+    APP_JWT_EXPIRATION=86400000
+    ENVEOF
+    
+    chmod 600 /opt/studyplanner/.env.production
+    chown ec2-user:ec2-user /opt/studyplanner/.env.production
   EOF
 
   root_block_device {

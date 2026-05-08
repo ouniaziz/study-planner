@@ -152,3 +152,6 @@ jobs:
 
             echo "==> Status:"
             sudo /usr/bin/docker compose -f docker-compose.prod.yml ps
+            
+            echo "==> Last 50 lines of Backend logs:"
+            sudo /usr/bin/docker logs --tail 50 studyplanner-backend

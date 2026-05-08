@@ -74,13 +74,22 @@ jobs:
       - name: Checkout source
         uses: actions/checkout@v4
 
-      - name: Wait for server to be ready
+      - name: Install Docker if missing
         uses: appleboy/ssh-action@v1.0.3
         with:
           host:     ${{ secrets.EC2_HOST }}
           username: ec2-user
           key:      ${{ secrets.EC2_SSH_PRIVATE_KEY }}
-          script:   sleep 120
+          script: |
+            if ! command -v docker &> /dev/null; then
+              echo "Docker not found, installing..."
+              sudo dnf update -y
+              sudo dnf install -y docker docker-compose-plugin
+              sudo systemctl enable --now docker
+              sudo usermod -aG docker ec2-user
+            else
+              echo "Docker already installed."
+            fi
 
       - name: Copy production compose file to EC2
         uses: appleboy/scp-action@v0.1.7

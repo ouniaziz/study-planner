@@ -81,7 +81,7 @@ jobs:
           username:  ec2-user
           key:       ${{ secrets.EC2_SSH_PRIVATE_KEY }}
           source:    "docker-compose.prod.yml"
-          target:    "/opt/studyplanner"
+          target:    "~/studyplanner"
           overwrite: true
 
       - name: SSH → pull images & restart containers
@@ -106,7 +106,7 @@ jobs:
             docker tag "${FRONTEND_IMAGE}:${IMAGE_TAG}" "${FRONTEND_IMAGE}:latest"
 
             echo "==> Deploying with Docker Compose..."
-            cd /opt/studyplanner
+            cd ~/studyplanner
 
             export DOCKERHUB_BACKEND="${BACKEND_IMAGE}"
             export DOCKERHUB_FRONTEND="${FRONTEND_IMAGE}"

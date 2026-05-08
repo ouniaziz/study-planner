@@ -7,8 +7,8 @@ set -e
 # -- System updates --
 dnf update -y
 
-# -- Install Docker --
-dnf install -y docker
+# -- Install Docker and Docker Compose --
+dnf install -y docker docker-compose-plugin
 systemctl enable docker
 systemctl start docker
 usermod -aG docker ec2-user
@@ -16,6 +16,10 @@ usermod -aG docker ec2-user
 # -- Install nginx --
 dnf install -y nginx
 systemctl enable nginx
+
+# -- Prepare deployment directory --
+mkdir -p /home/ec2-user/studyplanner
+chown ec2-user:ec2-user /home/ec2-user/studyplanner
 
 # -- Pull and run the React frontend container --
 docker pull ${frontend_image}

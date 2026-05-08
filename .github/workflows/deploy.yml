@@ -120,7 +120,7 @@ jobs:
           key:      ${{ secrets.EC2_SSH_PRIVATE_KEY }}
           script: |
             set -e
-            IMAGE_TAG="${{ github.sha }}"
+            IMAGE_TAG="${{ needs.build-and-push.outputs.image_tag }}"
             FRONTEND_IMAGE="${{ secrets.DOCKERHUB_USERNAME }}/studyplanner-frontend"
 
             echo "==> Pulling Frontend image..."

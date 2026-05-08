@@ -160,6 +160,10 @@ http {
 }
 EOF
             
+            echo "==> Debugging Config Files..."
+            cat /etc/nginx/nginx.conf
+            cat /etc/nginx/conf.d/studyplanner.conf
+            
             sudo /usr/sbin/nginx -t
             
             echo "==> Ensuring Nginx is running..."

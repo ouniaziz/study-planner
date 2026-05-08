@@ -140,5 +140,9 @@ jobs:
               -p 3000:80 \
               "${FRONTEND_IMAGE}:latest"
 
-            echo "==> Status:"
+            echo "==> Ensuring Nginx is running..."
+            sudo systemctl restart nginx
+            sudo systemctl status nginx --no-pager
+
+            echo "==> Final Status:"
             sudo /usr/bin/docker ps

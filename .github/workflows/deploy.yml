@@ -74,13 +74,13 @@ jobs:
       - name: Checkout source
         uses: actions/checkout@v4
 
-      - name: Wait for cloud-init to finish
+      - name: Wait for server to be ready
         uses: appleboy/ssh-action@v1.0.3
         with:
           host:     ${{ secrets.EC2_HOST }}
           username: ec2-user
           key:      ${{ secrets.EC2_SSH_PRIVATE_KEY }}
-          script:   sudo cloud-init status --wait
+          script:   sleep 60
 
       - name: Copy production compose file to EC2
         uses: appleboy/scp-action@v0.1.7

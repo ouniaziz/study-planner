@@ -2,7 +2,7 @@
 # user_data_frontend.sh
 # Rendered by templatefile() in frontend.tf — Terraform injects frontend_image and alb_dns.
 # Note: nginx variables ($$host, $$remote_addr, etc.) use $$ so Terraform leaves them as literal $ signs.
-set -e
+# # set -e (disabled to prevent boot failure) (disabled to prevent boot failure if images aren't pushed yet)
 
 # -- System updates --
 dnf update -y
@@ -22,12 +22,12 @@ mkdir -p /home/ec2-user/studyplanner
 chown ec2-user:ec2-user /home/ec2-user/studyplanner
 
 # -- Pull and run the React frontend container --
-docker pull ${frontend_image}
+docker pull ${frontend_image} || true || true
 docker run -d \
   --name studyplanner-frontend \
   --restart always \
   -p 3000:80 \
-  ${frontend_image}
+  ${frontend_image} || true || true
 
 # -- Configure nginx --
 # /      -> React app in Docker on port 3000

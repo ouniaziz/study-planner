@@ -14,10 +14,9 @@ public class CorsConfig {
     @Bean
     public CorsFilter corsFilter() {
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOrigins(List.of(
-                "http://localhost:5173",   // Vite dev server
-                "http://localhost:3000",   // Alternative dev port
-                "http://localhost:80"      // Production Docker
+        config.setAllowedOriginPatterns(List.of(
+                "http://localhost:*",
+                "http://98.81.203.18"
         ));
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
         config.setAllowedHeaders(List.of("*"));

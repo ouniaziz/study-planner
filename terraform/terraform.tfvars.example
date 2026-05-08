@@ -1,13 +1,32 @@
 # terraform.tfvars.example
-# Copy this to terraform.tfvars and fill in real values.
-# NEVER commit terraform.tfvars to Git.
+# Copy this file to terraform.tfvars and fill in real values.
+# !! NEVER commit terraform.tfvars to Git !!
 
-aws_region     = "us-east-1"
-project_name   = "studyplanner"
-instance_type  = "t2.micro"
+# ── General ───────────────────────────────────────────────────
+aws_region   = "us-east-1"
+project_name = "studyplanner"
 
-# Paste the full content of your ~/.ssh/id_rsa.pub (or equivalent) here.
+# ── EC2 ───────────────────────────────────────────────────────
+instance_type = "t2.micro"
+key_pair_name = "studyplanner-key"
+
+# Your public IP — get it from https://whatismyip.com
+# Used for SSH rules in backend-sg and frontend-sg (never 0.0.0.0/0)
+my_ip = "203.0.113.5/32"
+
+# Contents of your SSH public key (~/.ssh/id_rsa.pub)
 ssh_public_key = "ssh-rsa AAAA...your-public-key... user@host"
 
-# RDS Database password
+# ── Docker Images ─────────────────────────────────────────────
+# DockerHub image references — replace with your actual username
+dockerhub_backend_image  = "yourdockerhubuser/studyplanner-backend:latest"
+dockerhub_frontend_image = "yourdockerhubuser/studyplanner-frontend:latest"
+
+# ── Database ──────────────────────────────────────────────────
+db_name     = "studyplanner"
+db_username = "postgres"
+db_port     = 5432
+
+# Use a strong password — min 8 chars, alphanumeric
+# Alternatively set via: export TF_VAR_db_password="YourStrongPassword"
 db_password = "CHANGE_ME_strong_password_here"

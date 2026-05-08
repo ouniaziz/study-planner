@@ -80,7 +80,7 @@ jobs:
           host:     ${{ secrets.EC2_HOST }}
           username: ec2-user
           key:      ${{ secrets.EC2_SSH_PRIVATE_KEY }}
-          script:   sleep 60
+          script:   sleep 120
 
       - name: Copy production compose file to EC2
         uses: appleboy/scp-action@v0.1.7
@@ -106,12 +106,12 @@ jobs:
             FRONTEND_IMAGE="${{ secrets.DOCKERHUB_USERNAME }}/studyplanner-frontend"
 
             echo "==> Pulling images (tag: $IMAGE_TAG)..."
-            docker pull "${BACKEND_IMAGE}:${IMAGE_TAG}"
-            docker pull "${FRONTEND_IMAGE}:${IMAGE_TAG}"
+            /usr/bin/docker pull "${BACKEND_IMAGE}:${IMAGE_TAG}"
+            /usr/bin/docker pull "${FRONTEND_IMAGE}:${IMAGE_TAG}"
 
             # Re-tag as latest so compose uses them
-            docker tag "${BACKEND_IMAGE}:${IMAGE_TAG}"  "${BACKEND_IMAGE}:latest"
-            docker tag "${FRONTEND_IMAGE}:${IMAGE_TAG}" "${FRONTEND_IMAGE}:latest"
+            /usr/bin/docker tag "${BACKEND_IMAGE}:${IMAGE_TAG}"  "${BACKEND_IMAGE}:latest"
+            /usr/bin/docker tag "${FRONTEND_IMAGE}:${IMAGE_TAG}" "${FRONTEND_IMAGE}:latest"
 
             echo "==> Deploying with Docker Compose..."
             cd ~/studyplanner
@@ -120,10 +120,10 @@ jobs:
             export DOCKERHUB_FRONTEND="${FRONTEND_IMAGE}"
             export IMAGE_TAG="${IMAGE_TAG}"
 
-            docker compose -f docker-compose.prod.yml --env-file .env.production up -d --remove-orphans --pull always
+            /usr/bin/docker compose -f docker-compose.prod.yml --env-file .env.production up -d --remove-orphans --pull always
 
             echo "==> Pruning unused images..."
-            docker image prune -f
+            /usr/bin/docker image prune -f
 
             echo "==> Status:"
-            docker compose -f docker-compose.prod.yml ps
+            /usr/bin/docker compose -f docker-compose.prod.yml ps

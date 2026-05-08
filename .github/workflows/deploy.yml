@@ -80,15 +80,19 @@ jobs:
           username: ec2-user
           key:      ${{ secrets.EC2_SSH_PRIVATE_KEY }}
           script: |
+            # Ensure the instance has finished installing Docker from User Data
+            echo "==> Waiting for system initialization (cloud-init)..."
+            sudo cloud-init status --wait
+            
             set -e
             IMAGE_TAG="${{ needs.build-and-push.outputs.image_tag }}"
             FRONTEND_IMAGE="${{ secrets.DOCKERHUB_USERNAME }}/studyplanner-frontend"
 
-            echo "==> Stopping Host Nginx (using direct Docker instead)..."
+            echo "==> Stopping Host Nginx (freeing port 80)..."
             sudo systemctl stop nginx || true
             sudo systemctl disable nginx || true
 
-            echo "==> Pulling Frontend image..."
+            echo "==> Pulling Frontend image: ${IMAGE_TAG}"
             sudo docker pull "${FRONTEND_IMAGE}:${IMAGE_TAG}"
             sudo docker tag "${FRONTEND_IMAGE}:${IMAGE_TAG}" "${FRONTEND_IMAGE}:latest"
 
@@ -101,5 +105,5 @@ jobs:
               -p 80:80 \
               "${FRONTEND_IMAGE}:latest"
 
-            echo "==> Status:"
+            echo "==> Deployment Complete. Current Status:"
             sudo docker ps

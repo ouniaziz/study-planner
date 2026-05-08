@@ -3,9 +3,6 @@
 # Rendered by templatefile() in asg.tf — Terraform injects docker_image, db_host, db_port, db_name, db_user, db_pass.
 # set -e (disabled to prevent boot failure)
 
-# -- System updates --
-dnf update -y
-
 # -- Install Docker --
 dnf install -y docker
 systemctl enable docker

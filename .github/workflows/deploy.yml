@@ -87,17 +87,17 @@ jobs:
             echo "==> Restoring Nginx to a working state..."
             sudo dnf install -y nginx
             sudo tee /etc/nginx/nginx.conf << 'EOF'
-user nginx;
-worker_processes auto;
-error_log /var/log/nginx/error.log notice;
-pid /run/nginx.pid;
-events { worker_connections 1024; }
-http {
-    include /etc/nginx/mime.types;
-    sendfile on;
-    include /etc/nginx/conf.d/*.conf;
-}
-EOF
+            user nginx;
+            worker_processes auto;
+            error_log /var/log/nginx/error.log notice;
+            pid /run/nginx.pid;
+            events { worker_connections 1024; }
+            http {
+                include /etc/nginx/mime.types;
+                sendfile on;
+                include /etc/nginx/conf.d/*.conf;
+            }
+            EOF
             sudo systemctl restart nginx
 
             echo "==> Pulling Frontend image..."
@@ -107,8 +107,7 @@ EOF
             echo "==> Starting Frontend..."
             cd ~/studyplanner
             
-            # Use docker-compose for the frontend only (ignore the backend service in the file)
-            # We don't touch Nginx here because it's handled by the server's initial setup
+            # Start only the frontend (backend is in ASG)
             sudo docker compose -f docker-compose.prod.yml up -d frontend
 
             echo "==> Status:"

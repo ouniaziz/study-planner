@@ -140,10 +140,25 @@ jobs:
               -p 3000:80 \
               "${FRONTEND_IMAGE}:latest"
 
-            echo "==> Debugging Nginx..."
-            # Comment out the default server block in nginx.conf if it exists
-            sudo sed -i 's/listen       80 default_server;/#listen       80 default_server;/g' /etc/nginx/nginx.conf || true
-            sudo sed -i 's/listen       \[::\]:80 default_server;/#listen       \[::\]:80 default_server;/g' /etc/nginx/nginx.conf || true
+            echo "==> Creating clean Nginx configuration..."
+            sudo tee /etc/nginx/nginx.conf << 'EOF'
+user nginx;
+worker_processes auto;
+error_log /var/log/nginx/error.log notice;
+pid /run/nginx.pid;
+
+events {
+    worker_connections 1024;
+}
+
+http {
+    include             /etc/nginx/mime.types;
+    default_type        application/octet-stream;
+    sendfile            on;
+    keepalive_timeout   65;
+    include /etc/nginx/conf.d/*.conf;
+}
+EOF
             
             sudo /usr/sbin/nginx -t
             

@@ -140,6 +140,13 @@ jobs:
               -p 3000:80 \
               "${FRONTEND_IMAGE}:latest"
 
+            echo "==> Debugging Nginx..."
+            # Comment out the default server block in nginx.conf if it exists
+            sudo sed -i 's/listen       80 default_server;/#listen       80 default_server;/g' /etc/nginx/nginx.conf || true
+            sudo sed -i 's/listen       \[::\]:80 default_server;/#listen       \[::\]:80 default_server;/g' /etc/nginx/nginx.conf || true
+            
+            sudo /usr/sbin/nginx -t
+            
             echo "==> Ensuring Nginx is running..."
             sudo systemctl restart nginx
             sudo systemctl status nginx --no-pager

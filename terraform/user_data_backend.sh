@@ -21,9 +21,9 @@ docker run -d \
   --name studyplanner-backend \
   --restart always \
   -p 8080:8080 \
-  -e DB_HOST="${db_host}" \
-  -e DB_PORT="${db_port}" \
-  -e DB_NAME="${db_name}" \
-  -e DB_USER="${db_user}" \
-  -e DB_PASS="${db_pass}" \
+  -e SPRING_DATASOURCE_URL="jdbc:postgresql://${db_host}:${db_port}/${db_name}" \
+  -e SPRING_DATASOURCE_USERNAME="${db_user}" \
+  -e SPRING_DATASOURCE_PASSWORD="${db_pass}" \
+  -e APP_JWT_SECRET="${jwt_secret}" \
+  -e SPRING_PROFILES_ACTIVE="prod" \
   ${docker_image} || true

@@ -41,6 +41,7 @@ resource "aws_launch_template" "backend_lt" {
     db_name      = var.db_name
     db_user      = var.db_username
     db_pass      = var.db_password
+    jwt_secret   = var.jwt_secret
   }))
 
   # Ensure new instances replace old ones on user_data change

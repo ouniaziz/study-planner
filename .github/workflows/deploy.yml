@@ -112,7 +112,7 @@ jobs:
           target:    "~/studyplanner"
           overwrite: true
 
-      - name: SSH → pull images & restart containers
+      - name: Deploy Frontend to EC2
         uses: appleboy/ssh-action@v1.0.3
         with:
           host:     ${{ secrets.EC2_HOST }}
@@ -120,38 +120,25 @@ jobs:
           key:      ${{ secrets.EC2_SSH_PRIVATE_KEY }}
           script: |
             set -e
-
-            IMAGE_TAG="${{ needs.build-and-push.outputs.image_tag }}"
-            BACKEND_IMAGE="${{ secrets.DOCKERHUB_USERNAME }}/studyplanner-backend"
+            IMAGE_TAG="${{ github.sha }}"
             FRONTEND_IMAGE="${{ secrets.DOCKERHUB_USERNAME }}/studyplanner-frontend"
 
-            echo "==> Pulling images (tag: $IMAGE_TAG)..."
-            sudo /usr/bin/docker pull "${BACKEND_IMAGE}:${IMAGE_TAG}"
+            echo "==> Pulling Frontend image..."
             sudo /usr/bin/docker pull "${FRONTEND_IMAGE}:${IMAGE_TAG}"
-
-            # Re-tag as latest so compose uses them
-            sudo /usr/bin/docker tag "${BACKEND_IMAGE}:${IMAGE_TAG}"  "${BACKEND_IMAGE}:latest"
             sudo /usr/bin/docker tag "${FRONTEND_IMAGE}:${IMAGE_TAG}" "${FRONTEND_IMAGE}:latest"
 
-            echo "==> Deploying with Docker Compose..."
+            echo "==> Starting Frontend container..."
             cd ~/studyplanner
-
-            export DOCKERHUB_BACKEND="${BACKEND_IMAGE}"
-            export DOCKERHUB_FRONTEND="${FRONTEND_IMAGE}"
-            export IMAGE_TAG="${IMAGE_TAG}"
             
-            # Database & App Secrets (Passed from GitHub Secrets)
-            export POSTGRES_HOST="${{ secrets.POSTGRES_HOST }}"
-            export POSTGRES_PASSWORD="${{ secrets.POSTGRES_PASSWORD }}"
-            export APP_JWT_SECRET="${{ secrets.APP_JWT_SECRET }}"
-
-            sudo -E /usr/bin/docker compose -f docker-compose.prod.yml up -d --remove-orphans --pull always
-
-            echo "==> Pruning unused images..."
-            sudo /usr/bin/docker image prune -f
+            # Start only the frontend (backend is in ASG)
+            # We use docker run directly for simplicity on the frontend host
+            sudo /usr/bin/docker stop studyplanner-frontend || true
+            sudo /usr/bin/docker rm studyplanner-frontend || true
+            sudo /usr/bin/docker run -d \
+              --name studyplanner-frontend \
+              --restart always \
+              -p 3000:80 \
+              "${FRONTEND_IMAGE}:latest"
 
             echo "==> Status:"
-            sudo /usr/bin/docker compose -f docker-compose.prod.yml ps
-            
-            echo "==> Last 50 lines of Backend logs:"
-            sudo /usr/bin/docker logs --tail 50 studyplanner-backend
+            sudo /usr/bin/docker ps

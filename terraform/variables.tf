@@ -83,3 +83,9 @@ variable "db_port" {
   type        = number
   default     = 5432
 }
+
+variable "jwt_secret" {
+  description = "Secret key for JWT signing"
+  type        = string
+  sensitive   = true
+}
